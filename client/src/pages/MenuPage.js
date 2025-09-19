@@ -18,12 +18,18 @@ export default function MenuPage() {
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     return (
-        <div style={{ padding: 16 }}>
-            <h2>Menu</h2>
-            {items.map(it => <MenuItemCard key={it._id} item={it} onAdd={(item) => addToCart(item, 1)} />)}
+        <div className="container mt-4">
+            <h2 className="mb-4 text-center">Our Menu</h2>
+            <div className="row">
+                {items.map(it => (
+                    <div className="col-md-6 col-lg-4 mb-4" key={it._id}>
+                        <MenuItemCard item={it} onAdd={(item) => addToCart(item, 1)} />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

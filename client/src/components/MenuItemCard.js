@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 
 export default function MenuItemCard({ item, onAdd }) {
     return (
-        <div style={{ border: '1px solid #eee', padding: 12, borderRadius: 8, marginBottom: 10 }}>
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p><strong>₹ {item.price.toFixed(2)}</strong></p>
-            <div>
-                <button onClick={() => onAdd(item)}>Add to cart</button>
-                <Link to={`/menu/${item._id}`} style={{ marginLeft: 10 }}>View</Link>
+        <div className="card h-100">
+            <div className="card-body d-flex flex-column">
+                <h5 className="card-title">{item.name}</h5>
+                <p className="card-text">{item.description}</p>
+                <p className="card-text"><strong>₹ {item.price.toFixed(2)}</strong></p>
+                <div className="mt-auto">
+                    <button onClick={() => onAdd(item)} className="btn btn-primary">Add to cart</button>
+                    <Link to={`/menu/${item._id}`} className="btn btn-secondary ms-2">View</Link>
+                </div>
             </div>
         </div>
     );

@@ -17,18 +17,49 @@ export default function LoginPage() {
             navigate('/');
         } catch (err) {
             console.error(err);
-            alert('Login failed');
+            alert('Login failed. Please check your credentials.');
         }
     };
 
     return (
-        <div style={{ padding: 16 }}>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div><input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /></div>
-                <div><input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} /></div>
-                <button type="submit">Login</button>
-            </form>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6 col-lg-4">
+                    <div className="card">
+                        <div className="card-body">
+                            <h2 className="card-title text-center mb-4">Login</h2>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="emailInput" className="form-label">Email address</label>
+                                    <input
+                                        id="emailInput"
+                                        className="form-control"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="passwordInput" className="form-label">Password</label>
+                                    <input
+                                        id="passwordInput"
+                                        className="form-control"
+                                        placeholder="Password"
+                                        type="password"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="d-grid">
+                                    <button type="submit" className="btn btn-primary">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

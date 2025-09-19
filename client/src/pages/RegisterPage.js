@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -26,84 +25,71 @@ const RegisterPage = () => {
             alert("Registration successful! Please log in.");
             navigate("/login");
         } catch (err) {
-            setError(err.response?.data?.message || "Registration failed");
+            setError(err.response?.data?.message || "Registration failed. Please try again.");
         }
     };
 
     return (
-        <div style={styles.container}>
-            <h2>Register</h2>
-            {error && <p style={styles.error}>{error}</p>}
-            <form onSubmit={handleSubmit} style={styles.form}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    style={styles.input}
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    style={styles.input}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    style={styles.input}
-                />
-                <button type="submit" style={styles.button}>
-                    Register
-                </button>
-            </form>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6 col-lg-5">
+                    <div className="card shadow-sm">
+                        <div className="card-body">
+                            <h2 className="card-title text-center mb-4">Create an Account</h2>
+                            {error && <div className="alert alert-danger">{error}</div>}
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="nameInput" className="form-label">Full Name</label>
+                                    <input
+                                        type="text"
+                                        id="nameInput"
+                                        name="name"
+                                        className="form-control"
+                                        placeholder="Full Name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="emailInput" className="form-label">Email Address</label>
+                                    <input
+                                        type="email"
+                                        id="emailInput"
+                                        name="email"
+                                        className="form-control"
+                                        placeholder="Email Address"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="passwordInput" className="form-label">Password</label>
+                                    <input
+                                        type="password"
+                                        id="passwordInput"
+                                        name="password"
+                                        className="form-control"
+                                        placeholder="Password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="d-grid">
+                                    <button type="submit" className="btn btn-primary">Register</button>
+                                </div>
+                            </form>
+                            <div className="text-center mt-3">
+                                <p>Already have an account? <Link to="/login">Login here</Link></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        maxWidth: "400px",
-        margin: "80px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "5px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        textAlign: "center",
-    },
-    form: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-    },
-    input: {
-        padding: "10px",
-        fontSize: "16px",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-    },
-    button: {
-        backgroundColor: "#28a745",
-        color: "#fff",
-        padding: "10px",
-        fontSize: "18px",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-    },
-    error: {
-        color: "red",
-        marginBottom: "10px",
-    },
 };
 
 export default RegisterPage;

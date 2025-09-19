@@ -1,43 +1,25 @@
-// client/src/pages/HomePage.js
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 const HomePage = () => {
+    const { user } = useContext(AuthContext);
+
     return (
-        <div className="home-container" style={styles.container}>
-            <h1 style={styles.title}>🍴 Welcome to Foodie Restaurant</h1>
-            <p style={styles.subtitle}>
-                Delicious meals made fresh every day. Browse our menu and order now!
-            </p>
-            <Link to="/menu" style={styles.button}>
-                View Menu
-            </Link>
+        <div className="container text-center my-5">
+            <div className="p-5 mb-4 bg-light rounded-3 shadow-sm">
+                <div className="container-fluid py-5">
+                    <h1 className="display-5 fw-bold">🍴 Welcome back, {user?.name}!</h1>
+                    <p className="col-md-8 fs-4 mx-auto">
+                        Ready for another delicious meal? Browse our updated menu and discover your next favorite dish.
+                    </p>
+                    <Link to="/menu" className="btn btn-primary btn-lg mt-3">
+                        View Menu
+                    </Link>
+                </div>
+            </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        textAlign: "center",
-        marginTop: "80px",
-    },
-    title: {
-        fontSize: "36px",
-        fontWeight: "bold",
-        marginBottom: "20px",
-    },
-    subtitle: {
-        fontSize: "18px",
-        marginBottom: "30px",
-    },
-    button: {
-        backgroundColor: "#ff6600",
-        color: "#fff",
-        padding: "10px 20px",
-        textDecoration: "none",
-        borderRadius: "5px",
-        fontSize: "18px",
-    },
 };
 
 export default HomePage;

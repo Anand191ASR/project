@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { CartContext } from "../contexts/CartContext";
 import { createOrder } from "../api/orders";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function CartPage() {
     const { cart, updateQty, removeFromCart, clearCart, total } =
@@ -23,131 +23,70 @@ export default function CartPage() {
             navigate("/orders");
         } catch (err) {
             console.error("Checkout error:", err);
-            alert("⚠️ Order failed. Please log in first.");
-            navigate("/login");
+            alert("⚠️ Order failed. Please try again.");
         }
     };
 
     return (
-        <div style={styles.container}>
-            <h2>Your Cart 🛒</h2>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-8 col-lg-6">
+                    <h2 className="mb-4 text-center">Your Cart 🛒</h2>
 
-            {cart.length === 0 ? (
-                <p style={styles.empty}>Your cart is empty.</p>
-            ) : (
-                <>
-                    {cart.map((item) => (
-                        <div key={item.menuItemId} style={styles.cartItem}>
-                            <div>
-                                <strong>{item.name}</strong>
-                                <p>₹ {item.price.toFixed(2)}</p>
-                            </div>
+                    {cart.length === 0 ? (
+                        <div className="text-center">
+                            <p className="fs-5">Your cart is empty.</p>
+                            <Link to="/menu" className="btn btn-primary">Browse Menu</Link>
+                        </div>
+                    ) : (
+                        <>
+                            <ul className="list-group mb-4">
+                                {cart.map((item) => (
+                                    <li key={item.menuItemId} className="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 className="mb-1">{item.name}</h5>
+                                            <p className="mb-1">₹ {item.price.toFixed(2)}</p>
+                                        </div>
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                value={item.quantity}
+                                                onChange={(e) =>
+                                                    updateQty(item.menuItemId, Number(e.target.value))
+                                                }
+                                                className="form-control"
+                                                style={{ width: '60px' }}
+                                            />
+                                            <button
+                                                onClick={() => removeFromCart(item.menuItemId)}
+                                                className="btn btn-danger btn-sm ms-3"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
 
-                            <div style={styles.controls}>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={item.quantity}
-                                    onChange={(e) =>
-                                        updateQty(item.menuItemId, Number(e.target.value))
-                                    }
-                                    style={styles.input}
-                                />
+                            <h3 className="text-end mb-4">Total: ₹ {total.toFixed(2)}</h3>
+
+                            <div className="d-flex justify-content-between">
+                                <button onClick={clearCart} className="btn btn-secondary">
+                                    Clear Cart
+                                </button>
                                 <button
-                                    onClick={() => removeFromCart(item.menuItemId)}
-                                    style={styles.removeBtn}
+                                    onClick={handleCheckout}
+                                    disabled={!cart.length}
+                                    className="btn btn-success"
                                 >
-                                    Remove
+                                    Proceed to Checkout
                                 </button>
                             </div>
-                        </div>
-                    ))}
-
-                    <h3 style={styles.total}>Total: ₹ {total.toFixed(2)}</h3>
-
-                    <div style={styles.actions}>
-                        <button onClick={clearCart} style={styles.clearBtn}>
-                            Clear Cart
-                        </button>
-                        <button
-                            onClick={handleCheckout}
-                            disabled={!cart.length}
-                            style={styles.checkoutBtn}
-                        >
-                            Checkout
-                        </button>
-                    </div>
-                </>
-            )}
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        maxWidth: "600px",
-        margin: "40px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        background: "#fff",
-    },
-    cartItem: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px 0",
-        borderBottom: "1px solid #eee",
-    },
-    controls: {
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-    },
-    input: {
-        width: "50px",
-        padding: "5px",
-        textAlign: "center",
-    },
-    removeBtn: {
-        background: "#dc3545",
-        color: "#fff",
-        border: "none",
-        padding: "6px 10px",
-        borderRadius: "5px",
-        cursor: "pointer",
-    },
-    total: {
-        marginTop: "20px",
-        fontSize: "20px",
-        fontWeight: "bold",
-    },
-    actions: {
-        marginTop: "20px",
-        display: "flex",
-        justifyContent: "space-between",
-    },
-    clearBtn: {
-        background: "#6c757d",
-        color: "#fff",
-        border: "none",
-        padding: "10px 15px",
-        borderRadius: "5px",
-        cursor: "pointer",
-    },
-    checkoutBtn: {
-        background: "#28a745",
-        color: "#fff",
-        border: "none",
-        padding: "10px 15px",
-        borderRadius: "5px",
-        cursor: "pointer",
-    },
-    empty: {
-        textAlign: "center",
-        color: "#666",
-        fontSize: "18px",
-        margin: "40px 0",
-    },
-};
