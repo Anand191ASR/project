@@ -15,8 +15,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminRoute from './components/AdminRoute';
 import AdminLoginPage from './pages/AdminLoginPage';
-import AdminMenuManagementPage from './pages/AdminMenuManagementPage'; // Import Menu Management page
-import AdminOrderManagementPage from './pages/AdminOrderManagementPage'; // Import Order Management page
+import AdminMenuManagementPage from './pages/AdminMenuManagementPage';
+import AdminOrderManagementPage from './pages/AdminOrderManagementPage';
+import RedirectIfAuth from './components/RedirectIfAuth';
 
 const AppContent = () => {
   const { user } = useContext(AuthContext);
@@ -27,9 +28,18 @@ const AppContent = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={user ? <HomePage /> : <LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/login"
+          element={<RedirectIfAuth><LoginPage /></RedirectIfAuth>}
+        />
+        <Route
+          path="/register"
+          element={<RedirectIfAuth><RegisterPage /></RedirectIfAuth>}
+        />
+        <Route
+          path="/admin/login"
+          element={<RedirectIfAuth><AdminLoginPage /></RedirectIfAuth>}
+        />
 
         {/* Protected Routes */}
         <Route
