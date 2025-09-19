@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 
 const AdminOrderManagementPage = () => {
     const [orders, setOrders] = useState([]);
+    // 1. STATE: Keep track of the currently open accordion item's index.
+    const [activeKey, setActiveKey] = useState(null);
 
     const fetchOrders = async () => {
         try {
             const res = await getAllOrders();
-            // Sort orders so pending ones are at the top, then by date
             const sortedOrders = res.data.sort((a, b) => {
                 if (a.status === 'pending' && b.status !== 'pending') return -1;
                 if (a.status !== 'pending' && b.status === 'pending') return 1;
@@ -27,11 +28,17 @@ const AdminOrderManagementPage = () => {
     const handleStatusChange = async (orderId, newStatus) => {
         try {
             await updateOrderStatus(orderId, newStatus);
-            fetchOrders(); // Refresh the list to reflect the change
+            fetchOrders();
         } catch (err) {
             console.error("Failed to update order status:", err);
             alert("Error: Could not update status.");
         }
+    };
+
+    // 2. HANDLER: This function toggles the active accordion item.
+    const handleAccordionToggle = (index) => {
+        // If the clicked item is already open, close it. Otherwise, open the clicked item.
+        setActiveKey(activeKey === index ? null : index);
     };
 
     const getStatusVariant = (status) => {
@@ -50,16 +57,14 @@ const AdminOrderManagementPage = () => {
                 {orders.map((order, index) => (
                     <div className="accordion-item" key={order._id}>
                         <h2 className="accordion-header" id={`heading-${index}`}>
+                            {/* 3. DYNAMIC BUTTON: Removed data-bs-* attributes. Added onClick handler. */}
                             <button
-                                className="accordion-button collapsed"
+                                className={`accordion-button ${activeKey !== index ? 'collapsed' : ''}`}
                                 type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#collapse-${index}`}
-                                aria-expanded="false"
-                                aria-controls={`collapse-${index}`}
+                                onClick={() => handleAccordionToggle(index)}
+                                aria-expanded={activeKey === index}
                             >
                                 <div className="d-flex w-100 justify-content-between align-items-center pe-3">
-                                    {/* Add a check for userId before accessing its properties */}
                                     <span>Order #{order._id.substring(0, 8)}... by {order.userId ? order.userId.name : '[Deleted User]'}</span>
                                     <h5>
                                         <span className={`badge bg-${getStatusVariant(order.status)}`}>
@@ -69,20 +74,17 @@ const AdminOrderManagementPage = () => {
                                 </div>
                             </button>
                         </h2>
+                        {/* 4. DYNAMIC CONTENT DIV: Class is now controlled by React state. */}
                         <div
                             id={`collapse-${index}`}
-                            className="accordion-collapse collapse"
-                            aria-labelledby={`heading-${index}`}
-                            data-bs-parent="#ordersAccordion"
+                            className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}
                         >
                             <div className="accordion-body">
-                                {/* Add a check for userId before accessing its properties */}
                                 <p><strong>User:</strong> {order.userId ? order.userId.email : '[Deleted User]'}</p>
                                 <p><strong>Total:</strong> ₹{order.totalAmount.toFixed(2)}</p>
                                 <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
                                 <h6>Items:</h6>
                                 <ul>
-                                    {/* THE FIX IS HERE: Check if item.menuItemId exists before accessing .name */}
                                     {order.items.map((item, itemIndex) => (
                                         <li key={itemIndex}>
                                             {item.menuItemId ? item.menuItemId.name : '[Item no longer available]'} - Quantity: {item.quantity}
@@ -97,7 +99,11 @@ const AdminOrderManagementPage = () => {
                                             className="form-select"
                                             style={{ width: '200px' }}
                                             value={order.status}
-                                            onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                                            onChange={(e) => {
+                                                e.stopPropagation();
+                                                handleStatusChange(order._id, e.target.value);
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                             <option value="pending">Pending</option>
                                             <option value="in progress">In Progress</option>
