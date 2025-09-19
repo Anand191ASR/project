@@ -3,48 +3,22 @@ import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>Welcome to Our Restaurant</h1>
-            <p style={styles.subtitle}>
-                Discover a world of flavor with our expertly crafted dishes.
-            </p>
-            <div style={styles.buttonContainer}>
-                <Link to="/menu" style={styles.button}>View Menu</Link>
-                <Link to="/login" style={{ ...styles.button, ...styles.secondaryButton }}>Login</Link>
-                <Link to="/register" style={{ ...styles.button, ...styles.secondaryButton }}>Register</Link>
+        <div className="container my-5">
+            <div className="p-5 text-center bg-light rounded-3 shadow-sm">
+                <h1 className="display-4 fw-bold">🍴 Welcome to Foodie Restaurant</h1>
+                <p className="fs-4 col-lg-8 mx-auto">
+                    Discover a world of flavor with our expertly crafted dishes, made fresh just for you.
+                </p>
+                <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                    <Link to="/login" className="btn btn-primary btn-lg px-4 gap-3">Login</Link>
+                    <Link to="/register" className="btn btn-outline-secondary btn-lg px-4">Register</Link>
+                </div>
+                <div className="mt-4">
+                    <p className="text-muted">You'll need to log in to view our menu and place an order.</p>
+                </div>
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        textAlign: 'center',
-        paddingTop: '50px',
-    },
-    title: {
-        fontSize: '48px',
-        marginBottom: '20px',
-    },
-    subtitle: {
-        fontSize: '24px',
-        marginBottom: '40px',
-    },
-    buttonContainer: {
-        marginTop: '20px',
-    },
-    button: {
-        display: 'inline-block',
-        margin: '0 10px',
-        padding: '15px 30px',
-        backgroundColor: '#007bff',
-        color: 'white',
-        textDecoration: 'none',
-        borderRadius: '5px',
-    },
-    secondaryButton: {
-        backgroundColor: '#6c757d',
-    },
 };
 
 export default LandingPage;
