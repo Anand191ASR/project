@@ -10,7 +10,9 @@ export default function OrderHistoryPage() {
         (async () => {
             try {
                 const res = await getMyOrders();
-                setOrders(res.data);
+                // Also sort user's orders by most recent
+                const sortedOrders = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setOrders(sortedOrders);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -18,6 +20,15 @@ export default function OrderHistoryPage() {
             }
         })();
     }, []);
+
+    const getStatusVariant = (status) => {
+        switch (status) {
+            case 'completed': return 'success';
+            case 'in progress': return 'primary';
+            case 'pending':
+            default: return 'warning';
+        }
+    };
 
     if (loading) {
         return (
@@ -41,17 +52,19 @@ export default function OrderHistoryPage() {
                 orders.map(o => (
                     <div key={o._id} className="card mb-3 shadow-sm">
                         <div className="card-header d-flex justify-content-between">
-                            <span>Order ID: {o._id}</span>
-                            <span className={`badge bg-${o.status === 'completed' ? 'success' : 'warning'}`}>{o.status}</span>
+                            <span>Order ID: {o._id.substring(0, 12)}...</span>
+                            {/* Improved badge logic */}
+                            <span className={`badge bg-${getStatusVariant(o.status)}`}>{o.status}</span>
                         </div>
                         <div className="card-body">
                             <h5 className="card-title">Total: ₹ {o.totalAmount.toFixed(2)}</h5>
-                            <p className="card-text">Date: {new Date(o.createdAt).toLocaleDateString()}</p>
+                            <p className="card-text">Date: {new Date(o.createdAt).toLocaleString()}</p>
                             <h6>Items:</h6>
                             <ul className="list-group">
-                                {o.items.map(it => (
-                                    <li key={it.menuItemId._id} className="list-group-item">
-                                        {it.menuItemId.name} x {it.quantity}
+                                {/* THE FIX IS HERE: Check for 'it.menuItemId' and use a safe key */}
+                                {o.items.map((it, itemIndex) => (
+                                    <li key={itemIndex} className="list-group-item">
+                                        {it.menuItemId ? `${it.menuItemId.name} x ${it.quantity}` : `[Item no longer available] x ${it.quantity}`}
                                     </li>
                                 ))}
                             </ul>
