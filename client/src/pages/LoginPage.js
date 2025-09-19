@@ -6,18 +6,35 @@ import { useNavigate } from 'react-router-dom';
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const { login: setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    // Regex patterns for validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
+        // Perform validation
+        if (!emailRegex.test(email)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+
+        if (!passwordRegex.test(password)) {
+            setError('Password must be at least 8 characters long and contain at least one letter and one number.');
+            return;
+        }
+
         try {
             const res = await login({ email, password });
             setAuth(res.data.token, res.data.user);
             navigate('/');
         } catch (err) {
-            console.error(err);
-            alert('Login failed. Please check your credentials.');
+            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         }
     };
 
@@ -28,6 +45,7 @@ export default function LoginPage() {
                     <div className="card">
                         <div className="card-body">
                             <h2 className="card-title text-center mb-4">Login</h2>
+                            {error && <div className="alert alert-danger">{error}</div>}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label htmlFor="emailInput" className="form-label">Email address</label>

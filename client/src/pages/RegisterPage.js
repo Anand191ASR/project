@@ -12,6 +12,14 @@ const RegisterPage = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    // Regex patterns for validation
+    // A more comprehensive email regex
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    // Regex for name (letters, spaces, and hyphens only)
+    const nameRegex = /^[A-Za-z\s-]+$/;
+    // Regex for password (at least 8 characters, one letter, one number)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -19,6 +27,27 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
+        // Perform validation
+        if (!formData.name) {
+            setError("Name is required.");
+            return;
+        }
+
+        if (!nameRegex.test(formData.name)) {
+            setError("Name can only contain letters, spaces, and hyphens.");
+            return;
+        }
+
+        if (!emailRegex.test(formData.email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!passwordRegex.test(formData.password)) {
+            setError("Password must be at least 8 characters long and contain at least one letter and one number.");
+            return;
+        }
 
         try {
             await axios.post("http://localhost:5000/api/auth/register", formData);
