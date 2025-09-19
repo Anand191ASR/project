@@ -59,7 +59,8 @@ const AdminOrderManagementPage = () => {
                                 aria-controls={`collapse-${index}`}
                             >
                                 <div className="d-flex w-100 justify-content-between align-items-center pe-3">
-                                    <span>Order #{order._id.substring(0, 8)}... by {order.userId.name}</span>
+                                    {/* Add a check for userId before accessing its properties */}
+                                    <span>Order #{order._id.substring(0, 8)}... by {order.userId ? order.userId.name : '[Deleted User]'}</span>
                                     <h5>
                                         <span className={`badge bg-${getStatusVariant(order.status)}`}>
                                             {order.status}
@@ -75,14 +76,16 @@ const AdminOrderManagementPage = () => {
                             data-bs-parent="#ordersAccordion"
                         >
                             <div className="accordion-body">
-                                <p><strong>User:</strong> {order.userId.email}</p>
+                                {/* Add a check for userId before accessing its properties */}
+                                <p><strong>User:</strong> {order.userId ? order.userId.email : '[Deleted User]'}</p>
                                 <p><strong>Total:</strong> ₹{order.totalAmount.toFixed(2)}</p>
                                 <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
                                 <h6>Items:</h6>
                                 <ul>
-                                    {order.items.map(item => (
-                                        <li key={item.menuItemId._id}>
-                                            {item.menuItemId.name} - Quantity: {item.quantity}
+                                    {/* THE FIX IS HERE: Check if item.menuItemId exists before accessing .name */}
+                                    {order.items.map((item, itemIndex) => (
+                                        <li key={itemIndex}>
+                                            {item.menuItemId ? item.menuItemId.name : '[Item no longer available]'} - Quantity: {item.quantity}
                                         </li>
                                     ))}
                                 </ul>

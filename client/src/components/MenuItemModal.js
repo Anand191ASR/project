@@ -11,7 +11,7 @@ const MenuItemModal = ({ show, handleClose, onSave, itemToEdit }) => {
 
     useEffect(() => {
         if (show) {
-            // If an item is passed for editing, populate the form
+
             if (itemToEdit) {
                 setFormData({
                     name: itemToEdit.name,
@@ -21,7 +21,7 @@ const MenuItemModal = ({ show, handleClose, onSave, itemToEdit }) => {
                     available: itemToEdit.available,
                 });
             } else {
-                // Otherwise, reset the form for a new item
+
                 setFormData({
                     name: '',
                     description: '',
@@ -46,17 +46,17 @@ const MenuItemModal = ({ show, handleClose, onSave, itemToEdit }) => {
         onSave(formData);
     };
 
-    // If the 'show' prop is false, don't render anything
+
     if (!show) {
         return null;
     }
 
     return (
         <>
-            {/* Modal Backdrop */}
+
             <div className="modal-backdrop fade show"></div>
 
-            {/* Modal Component */}
+
             <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
