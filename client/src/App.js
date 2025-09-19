@@ -11,6 +11,7 @@ import RegisterPage from './pages/RegisterPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
+import ProtectedRoute from './components/ProtectedRoute'; // Import the new component
 
 const AppContent = () => {
   const { user } = useContext(AuthContext);
@@ -19,13 +20,44 @@ const AppContent = () => {
     <>
       <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={user ? <HomePage /> : <LandingPage />} />
-        <Route path="/menu" element={<MenuPage />} />
-        <Route path="/menu/:id" element={<ProductDetailPage />} />
-        <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/orders" element={<OrderHistoryPage />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/menu"
+          element={
+            <ProtectedRoute>
+              <MenuPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/menu/:id"
+          element={
+            <ProtectedRoute>
+              <ProductDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrderHistoryPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );
