@@ -16,6 +16,10 @@ const LandingPage = () => {
                 <div className="mt-4">
                     <p className="text-muted">You'll need to log in to view our menu and place an order.</p>
                 </div>
+                {/* <img src='bg.png' /> */}
+                {/* <div class="container-fluid p-0">
+                    <img src="bg.png" class="img-fluid w-100" alt="Restaurant Background" />
+                </div> */}
             </div>
         </div>
     );
